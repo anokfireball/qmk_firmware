@@ -36,6 +36,51 @@ enum __layers {
 #define WIN_SZ RALT(KC_S)
 #define WIN_EUR RALT(KC_5)
 
+// OSX versions of umlauts and eszett
+// works really well with plain US ANSI (OSX)
+enum mac_umlauts {
+    MAC_AE = SAFE_RANGE,
+    MAC_OE,
+    MAC_UE,
+};
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+  const bool shift = (get_mods() | get_oneshot_mods()) & MOD_MASK_SHIFT;
+
+  switch (keycode) {
+    case MAC_AE:
+      if (record->event.pressed) {
+        if (shift) {
+          SEND_STRING(SS_LALT("u") "A");
+        } else {
+          SEND_STRING(SS_LALT("u") "a");
+        }
+      }
+      return false; // Skip all further processing of this key
+    case MAC_UE:
+      if (record->event.pressed) {
+        if (shift) {
+          SEND_STRING(SS_LALT("u") "U");
+        } else {
+          SEND_STRING(SS_LALT("u") "u");
+        }
+      }
+      return false; // Skip all further processing of this key
+    case MAC_OE:
+      if (record->event.pressed) {
+        if (shift) {
+          SEND_STRING(SS_LALT("u") "O");
+        } else {
+          SEND_STRING(SS_LALT("u") "o");
+        }
+      }
+      return false; // Skip all further processing of this key
+    default:
+      return true; // Process all other keycodes normally
+  }
+}
+#define MAC_SZ LALT(KC_S)
+#define MAC_EUR LSA(KC_2)
+
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 
@@ -74,8 +119,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [MAC_U] = LAYOUT_all( /* Umlauts */
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,
+        _______, _______, _______, MAC_EUR, _______, _______, _______, MAC_UE,  _______, MAC_OE,  _______, _______, _______, _______,          _______,
+        _______, MAC_AE,  MAC_SZ,  _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______, _______, _______,
         _______, _______, _______,                   _______,                            _______,MO(MAC_F),_______,          _______, _______, _______),
 
@@ -87,7 +132,6 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______, _______, _______, _______, KC_CALC, _______, _______, _______, KC_MUTE, KC_VOLD, KC_VOLU, _______,          _______,  RGB_VAI, _______,
         _______, _______, _______,                   _______,                            _______, _______, _______,          RGB_SAD,  RGB_VAD, RGB_SAI)
 };
-
 
 // clang-format off
 #if defined(ENCODER_MAP_ENABLE)
