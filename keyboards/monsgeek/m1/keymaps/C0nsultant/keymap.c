@@ -16,17 +16,30 @@
 
 #include QMK_KEYBOARD_H
 
-enum __layers {
-    WIN_B,
-    WIN_U,
-    WIN_F,
-    MAC_B,
-    MAC_U,
-    MAC_F
-};
+enum __layers { WIN_B, WIN_U, WIN_F, MAC_B, MAC_U, MAC_F };
 
-#define KC_TASK LGUI(KC_TAB)
-#define KC_FLXP LGUI(KC_E)
+#define LED_LGUI 75
+#define LED_LALT 76
+
+bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
+    switch (get_highest_layer(layer_state | default_layer_state)) {
+        case WIN_B:
+        case WIN_U:
+        case WIN_F:
+            rgb_matrix_set_color(LED_LGUI, RGB_CORAL);
+            break;
+        case MAC_B:
+        case MAC_U:
+        case MAC_F:
+            rgb_matrix_set_color(LED_LALT, RGB_CORAL);
+            break;
+        default:
+            rgb_matrix_set_color(LED_LGUI, RGB_RED);
+            rgb_matrix_set_color(LED_LALT, RGB_RED);
+            break;
+    }
+    return false;
+}
 
 // WIN versions of umlauts and eszett
 // works really well with US-International (WIN) and us-acentos (LINUX)
@@ -44,39 +57,39 @@ enum mac_umlauts {
     MAC_UE,
 };
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-  const bool shift = (get_mods() | get_oneshot_mods()) & MOD_MASK_SHIFT;
+    const bool shift = (get_mods() | get_oneshot_mods()) & MOD_MASK_SHIFT;
 
-  switch (keycode) {
-    case MAC_AE:
-      if (record->event.pressed) {
-        if (shift) {
-          SEND_STRING(SS_LALT("u") "A");
-        } else {
-          SEND_STRING(SS_LALT("u") "a");
-        }
-      }
-      return false; // Skip all further processing of this key
-    case MAC_UE:
-      if (record->event.pressed) {
-        if (shift) {
-          SEND_STRING(SS_LALT("u") "U");
-        } else {
-          SEND_STRING(SS_LALT("u") "u");
-        }
-      }
-      return false; // Skip all further processing of this key
-    case MAC_OE:
-      if (record->event.pressed) {
-        if (shift) {
-          SEND_STRING(SS_LALT("u") "O");
-        } else {
-          SEND_STRING(SS_LALT("u") "o");
-        }
-      }
-      return false; // Skip all further processing of this key
-    default:
-      return true; // Process all other keycodes normally
-  }
+    switch (keycode) {
+        case MAC_AE:
+            if (record->event.pressed) {
+                if (shift) {
+                    SEND_STRING(SS_LALT("u") "A");
+                } else {
+                    SEND_STRING(SS_LALT("u") "a");
+                }
+            }
+            return false; // Skip all further processing of this key
+        case MAC_UE:
+            if (record->event.pressed) {
+                if (shift) {
+                    SEND_STRING(SS_LALT("u") "U");
+                } else {
+                    SEND_STRING(SS_LALT("u") "u");
+                }
+            }
+            return false; // Skip all further processing of this key
+        case MAC_OE:
+            if (record->event.pressed) {
+                if (shift) {
+                    SEND_STRING(SS_LALT("u") "O");
+                } else {
+                    SEND_STRING(SS_LALT("u") "o");
+                }
+            }
+            return false; // Skip all further processing of this key
+        default:
+            return true; // Process all other keycodes normally
+    }
 }
 #define MAC_SZ LALT(KC_S)
 #define MAC_EUR LSA(KC_2)
