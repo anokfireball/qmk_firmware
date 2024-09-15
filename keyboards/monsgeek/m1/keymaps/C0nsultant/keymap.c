@@ -61,68 +61,70 @@ enum custom_keycodes {
     MAC_OE,
     MAC_UE,
 };
+
+void send_string_(const char *str) {
+    // Save the current modifier state to ensure that any active modifiers (e.g., shift, ctrl)
+    // are not lost when sending the string. Left-Shift somehow loses its modifier state when
+    // SEND_STRING
+    uint8_t mods = get_mods();
+    uint8_t oneshot_mods = get_oneshot_mods();
+    clear_mods();
+    clear_oneshot_mods();
+    SEND_STRING(str);
+    set_mods(mods);
+    set_oneshot_mods(oneshot_mods);
+}
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     const bool shift = (get_mods() | get_oneshot_mods()) & MOD_MASK_SHIFT;
 
-    switch (keycode) {
-        // TODO This breaks left shift + key combos. right shift works fine for whatever reason...
-        case WIN_QUOT:
-            if (record->event.pressed) {
+    if (record->event.pressed) {
+        switch (keycode) {
+            case WIN_QUOT:
                 if (shift) {
-                    SEND_STRING("\" ");
+                    send_string_("\" ");
                 } else {
-                    SEND_STRING("' ");
+                    send_string_("' ");
                 }
-            }
-            return false; // Skip all further processing of this key
-        case WIN_GRV:
-            if (record->event.pressed) {
+                return false; // Skip all further processing of this key
+            case WIN_GRV:
                 if (shift) {
-                    SEND_STRING("~ ");
+                    send_string_("~ ");
                 } else {
-                    SEND_STRING("` ");
+                    send_string_("` ");
                 }
-            }
-            return false; // Skip all further processing of this key
-        case WIN_6:
-            if (record->event.pressed) {
+                return false; // Skip all further processing of this key
+            case WIN_6:
                 if (shift) {
-                    SEND_STRING("^ ");
+                    send_string_("^ ");
                 } else {
-                    SEND_STRING("6");
+                    send_string_("6");
                 }
-            }
-            return false; // Skip all further processing of this key
-        case MAC_AE:
-            if (record->event.pressed) {
+                return false; // Skip all further processing of this key
+            case MAC_AE:
                 if (shift) {
-                    SEND_STRING(SS_LALT("u") "A");
+                    send_string_(SS_LALT("u") "A");
                 } else {
-                    SEND_STRING(SS_LALT("u") "a");
+                    send_string_(SS_LALT("u") "a");
                 }
-            }
-            return false; // Skip all further processing of this key
-        case MAC_UE:
-            if (record->event.pressed) {
+                return false; // Skip all further processing of this key
+            case MAC_UE:
                 if (shift) {
-                    SEND_STRING(SS_LALT("u") "U");
+                    send_string_(SS_LALT("u") "U");
                 } else {
-                    SEND_STRING(SS_LALT("u") "u");
+                    send_string_(SS_LALT("u") "u");
                 }
-            }
-            return false; // Skip all further processing of this key
-        case MAC_OE:
-            if (record->event.pressed) {
+                return false; // Skip all further processing of this key
+            case MAC_OE:
                 if (shift) {
-                    SEND_STRING(SS_LALT("u") "O");
+                    send_string_(SS_LALT("u") "O");
                 } else {
-                    SEND_STRING(SS_LALT("u") "o");
+                    send_string_(SS_LALT("u") "o");
                 }
-            }
-            return false; // Skip all further processing of this key
-        default:
-            return true; // Process all other keycodes normally
+                return false; // Skip all further processing of this key
+        }
     }
+    return true; // Process all other keycodes normally
 }
 #define MAC_SZ LALT(KC_S)
 #define MAC_EUR LSA(KC_2)
