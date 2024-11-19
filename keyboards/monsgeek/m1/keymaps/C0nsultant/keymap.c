@@ -43,10 +43,10 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
 
 // WIN versions of umlauts and eszett
 // works really well with US-International (WIN) and us-acentos (LINUX)
-#define WIN_AE RALT(KC_Q)
-#define WIN_OE RALT(KC_P)
-#define WIN_UE RALT(KC_Y)
-#define WIN_SZ RALT(KC_S)
+#define WIN_AE  RALT(KC_Q)
+#define WIN_OE  RALT(KC_P)
+#define WIN_UE  RALT(KC_Y)
+#define WIN_SZ  RALT(KC_S)
 #define WIN_EUR RALT(KC_5)
 
 enum custom_keycodes {
@@ -129,7 +129,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 #define MAC_SZ LALT(KC_S)
 #define MAC_EUR LSA(KC_2)
 
-// clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [WIN_B] = LAYOUT_all( /* Base */
         KC_ESC,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11, KC_F12,   KC_DEL,           KC_MPLY,
@@ -148,15 +147,15 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______, _______, _______,                   _______,                            _______,MO(WIN_F),_______,          _______, _______, _______),
 
     [WIN_F] = LAYOUT_all( /* FN */
-        QK_BOOT, KC_MYCM, KC_MAIL, KC_WSCH, KC_WHOM, KC_MSEL, KC_MPLY, KC_MPRV, KC_MNXT, _______, _______, _______, _______, _______,           KC_MUTE,
+        QK_BOOT, KC_BRID, KC_BRIU, KC_MYCM, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,           KC_MUTE,
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, RGB_SPD, RGB_SPI, _______,           _______,
-        _______, _______,TG(WIN_U),_______, _______, _______, _______, _______, KC_INS, DF(MAC_B),KC_PSCR, _______, _______, RGB_MOD,           _______,
+        _______, _______, _______, _______, _______, _______, _______, _______, _______,DF(MAC_B),_______, _______, _______, RGB_MOD,           _______,
         _______, _______, _______, _______, _______, _______, _______, _______, _______, RGB_TOG, _______, _______, RGB_MOD, RGB_HUI,           _______,
-        _______, _______, _______, _______, KC_CALC, _______, _______, _______, KC_MUTE, KC_VOLD, KC_VOLU, _______,          _______,  RGB_VAI, _______,
-        _______, GU_TOGG, _______,                   _______,                            _______, _______, _______,          RGB_SAD,  RGB_VAD, RGB_SAI),
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,  RGB_VAI, _______,
+        _______, _______, _______,                   _______,                            _______, _______, _______,          RGB_SAD,  RGB_VAD, RGB_SAI),
 
     [MAC_B] = LAYOUT_all( /* Base */
-        KC_ESC,  KC_BRID, KC_BRIU, KC_MCTL, KC_LPAD, KC_F5,   KC_F6,   KC_MPRV, KC_MPLY, KC_MNXT, KC_MUTE, KC_VOLD,KC_VOLU,  KC_DEL,           KC_MPLY,
+        KC_ESC,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  KC_DEL,           KC_MPLY,
         KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS,KC_EQL,   KC_BSPC,          KC_HOME,
         KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC,KC_RBRC,  KC_BSLS,          KC_PGUP,
        MO(MAC_U),KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,KC_NUHS,  KC_ENT,           KC_PGDN,
@@ -172,15 +171,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______, _______, _______,                   _______,                            _______,MO(MAC_F),_______,          _______, _______, _______),
 
     [MAC_F] = LAYOUT_all( /* FN */
-        QK_BOOT, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,  KC_F9,    KC_F10,  KC_F11,  KC_F12,  KC_DEL,            KC_MUTE,
+        QK_BOOT, KC_BRID, KC_BRIU, KC_MCTL, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,           KC_MUTE,
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, RGB_SPD, RGB_SPI, _______,           _______,
-        _______, _______,TG(MAC_U),_______, _______, _______, _______, _______, KC_INS, DF(WIN_B),KC_PSCR, _______, _______, RGB_MOD,           _______,
+        _______, _______, _______, _______, _______, _______, _______, _______, _______,DF(WIN_B),_______, _______, _______, RGB_MOD,           _______,
         _______, _______, _______, _______, _______, _______, _______, _______, _______, RGB_TOG, _______, _______, RGB_MOD, RGB_HUI,           _______,
-        _______, _______, _______, _______, KC_CALC, _______, _______, _______, KC_MUTE, KC_VOLD, KC_VOLU, _______,          _______,  RGB_VAI, _______,
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,  RGB_VAI, _______,
         _______, _______, _______,                   _______,                            _______, _______, _______,          RGB_SAD,  RGB_VAD, RGB_SAI)
 };
 
-// clang-format off
 #if defined(ENCODER_MAP_ENABLE)
 const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
     [WIN_B] = { ENCODER_CCW_CW(KC_MNXT, KC_MPRV) },
