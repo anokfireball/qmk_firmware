@@ -131,7 +131,6 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
 
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-
     [WIN_B] = LAYOUT_all( /* Base */
         KC_ESC,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11, KC_F12,   KC_DEL,           KC_MPLY,
         WIN_GRV, KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    WIN_6,   KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS,KC_EQL,   KC_BSPC,          KC_HOME,
@@ -149,7 +148,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______, _______, _______,                   _______,                            _______,MO(WIN_F),_______,          _______, _______, _______),
 
     [WIN_F] = LAYOUT_all( /* FN */
-        QK_BOOT, KC_MYCM, KC_MAIL, KC_WSCH, KC_WHOM, KC_MSEL, KC_MPLY, KC_MPRV, KC_MNXT, _______, _______, _______, _______, _______,           RGB_MOD,
+        QK_BOOT, KC_MYCM, KC_MAIL, KC_WSCH, KC_WHOM, KC_MSEL, KC_MPLY, KC_MPRV, KC_MNXT, _______, _______, _______, _______, _______,           KC_MUTE,
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, RGB_SPD, RGB_SPI, _______,           _______,
         _______, _______,TG(WIN_U),_______, _______, _______, _______, _______, KC_INS, DF(MAC_B),KC_PSCR, _______, _______, RGB_MOD,           _______,
         _______, _______, _______, _______, _______, _______, _______, _______, _______, RGB_TOG, _______, _______, RGB_MOD, RGB_HUI,           _______,
@@ -173,7 +172,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______, _______, _______,                   _______,                            _______,MO(MAC_F),_______,          _______, _______, _______),
 
     [MAC_F] = LAYOUT_all( /* FN */
-        QK_BOOT, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,  KC_F9,    KC_F10,  KC_F11,  KC_F12,  KC_DEL,            RGB_MOD,
+        QK_BOOT, KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,  KC_F9,    KC_F10,  KC_F11,  KC_F12,  KC_DEL,            KC_MUTE,
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, RGB_SPD, RGB_SPI, _______,           _______,
         _______, _______,TG(MAC_U),_______, _______, _______, _______, _______, KC_INS, DF(WIN_B),KC_PSCR, _______, _______, RGB_MOD,           _______,
         _______, _______, _______, _______, _______, _______, _______, _______, _______, RGB_TOG, _______, _______, RGB_MOD, RGB_HUI,           _______,
@@ -184,12 +183,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 // clang-format off
 #if defined(ENCODER_MAP_ENABLE)
 const uint16_t PROGMEM encoder_map[][NUM_ENCODERS][NUM_DIRECTIONS] = {
-    [WIN_B] = { ENCODER_CCW_CW(KC_VOLU, KC_VOLD) },
-    [WIN_U] = { ENCODER_CCW_CW(KC_VOLU, KC_VOLD) },
-    [WIN_F] = { ENCODER_CCW_CW(RGB_VAI, RGB_VAD) },
-    [MAC_B] = { ENCODER_CCW_CW(KC_VOLU, KC_VOLD) },
-    [MAC_U] = { ENCODER_CCW_CW(KC_VOLU, KC_VOLD) },
-    [MAC_F] = { ENCODER_CCW_CW(RGB_VAI, RGB_VAD) }
+    [WIN_B] = { ENCODER_CCW_CW(KC_MNXT, KC_MPRV) },
+    [WIN_U] = { ENCODER_CCW_CW(KC_MNXT, KC_MPRV) },
+    [WIN_F] = { ENCODER_CCW_CW(KC_VOLU, KC_VOLD) },
+    [MAC_B] = { ENCODER_CCW_CW(KC_MNXT, KC_MPRV) },
+    [MAC_U] = { ENCODER_CCW_CW(KC_MNXT, KC_MPRV) },
+    [MAC_F] = { ENCODER_CCW_CW(KC_VOLU, KC_VOLD) }
 };
 #endif
 
