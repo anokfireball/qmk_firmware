@@ -15,27 +15,42 @@
     "diode_direction": "COL2ROW",
     "features": {
         "bootmagic": true,
+        "mousekey": false,
         "extrakey": true,
-        "mousekey": true,
+        "console": false,
+        "command": false,
         "nkro": true,
-        "rgblight": true
+        "rgb_matrix": true
+    },
+    "qmk": {
+        "locking": {
+            "resync": true
+        }
     },
     "ws2812": {
         "pin": "B3"
     },
-    "rgblight": {
-        "animations": {
-            "breathing": true,
-            "christmas": true,
-            "knight": true,
-            "rainbow_mood": true,
-            "rainbow_swirl": true,
-            "snake": true,
-            "static_gradient": true
-        },
-        "brightness_steps": 10,
-        "saturation_steps": 8,
-        "led_count": 16
+    "rgb_matrix": {
+        "driver": "ws2812",
+        "layout": [
+            { "flags": 4, "matrix": [0, 0],  "x":  0, "y": 0 },
+            { "flags": 4, "matrix": [0, 1],  "x": 14, "y": 0 },
+            { "flags": 4, "matrix": [0, 2],  "x": 29, "y": 0 },
+            { "flags": 4, "matrix": [0, 3],  "x": 44, "y": 0 },
+            { "flags": 4, "matrix": [0, 4],  "x": 59, "y": 0 },
+            { "flags": 4, "matrix": [0, 5],  "x": 74, "y": 0 },
+            { "flags": 4, "matrix": [0, 6],  "x": 89, "y": 0 },
+            { "flags": 4, "matrix": [0, 7],  "x":104, "y": 0 },
+            { "flags": 4, "matrix": [0, 8],  "x":119, "y": 0 },
+            { "flags": 4, "matrix": [0, 9],  "x":134, "y": 0 },
+            { "flags": 4, "matrix": [0, 10],  "x":149, "y": 0 },
+            { "flags": 4, "matrix": [0, 11],  "x":164, "y": 0 },
+            { "flags": 4, "matrix": [0, 12],  "x":179, "y": 0 },
+            { "flags": 4, "matrix": [0, 13],  "x":196, "y": 0 },
+            { "flags": 4, "matrix": [0, 14],  "x":196, "y": 0 },
+            { "flags": 4, "matrix": [1, 0],  "x":196, "y": 0 }
+        ],
+        "sleep": true
     },
     "processor": "STM32F072",
     "bootloader": "stm32-dfu",
