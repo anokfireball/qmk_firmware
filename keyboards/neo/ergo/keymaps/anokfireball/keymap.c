@@ -62,9 +62,9 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
             rgb_matrix_set_color(7, RGB_GREEN);
             break;
         default:
-            rgb_matrix_set_color(5, RGB_RED);
-            rgb_matrix_set_color(6, RGB_RED);
-            rgb_matrix_set_color(7, RGB_RED);
+            rgb_matrix_set_color(5, RGB_WHITE);
+            rgb_matrix_set_color(6, RGB_WHITE);
+            rgb_matrix_set_color(7, RGB_WHITE);
             break;
     }
     for (uint8_t i = 8; i < 16; i++) {
@@ -82,6 +82,7 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
 #define WIN_EUR  RALT(KC_5)
 #define WIN_SLP  LWIN(KC_L)
 #define WIN_CAPS CTL_T(KC_ESC)
+#define WIN_SPC  LT(WIN_U, KC_SPC)
 
 enum custom_keycodes {
     // avoid dead keys
@@ -183,7 +184,6 @@ typedef struct {
 } td_tap_t;
 
 enum {
-    WIN_RSPC,
     KC_RSPC
 };
 
@@ -245,9 +245,13 @@ void rspc_finished(tap_dance_state_t *state, void *user_data) {
             register_code(KC_SPC);
             break;
         case TD_DOUBLE_HOLD:
-            register_code(KC_LCTL);
-            register_code(KC_LOPT);
-            register_code(KC_LCMD);
+            if (isWin) {
+
+            } else {
+                register_code(KC_LCTL);
+                register_code(KC_LOPT);
+                register_code(KC_LCMD);
+            }
             break;
         default:
             break;
@@ -285,9 +289,13 @@ void rspc_reset(tap_dance_state_t *state, void *user_data) {
             unregister_code(KC_SPC);
             break;
         case TD_DOUBLE_HOLD:
-            unregister_code(KC_LCTL);
-            unregister_code(KC_LOPT);
-            unregister_code(KC_LCMD);
+            if (isWin) {
+
+            } else {
+                unregister_code(KC_LCTL);
+                unregister_code(KC_LOPT);
+                unregister_code(KC_LCMD);
+            }
             break;
         default:
             break;
@@ -305,7 +313,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_PGUP, KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                      KC_Y,    KC_U,    KC_I,   KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSLS,
         KC_PGDN,WIN_CAPS, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                      KC_H,    KC_J,    KC_K,   KC_L,    KC_SCLN,WIN_QUOT,           KC_ENT,
         KC_END,  KC_LSFT, XXXXXXX, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,             KC_B,    KC_N,    KC_M,   KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT, KC_RSFT,
-                 KC_LCTL, KC_LGUI,          KC_LALT,          KC_SPC,                         TD(KC_RSPC),         KC_RALT,         MO(WIN_F),KC_RGUI, KC_RCTL
+                 KC_LCTL, KC_LGUI,          KC_LALT,          KC_SPC,                          WIN_SPC,            KC_RALT,         MO(WIN_F),KC_RGUI, KC_RCTL
     ),
 
     [WIN_U] = LAYOUT_hot( /* Umlauts */
@@ -319,9 +327,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [WIN_F] = LAYOUT_hot( /* FN */
         _______, _______, KC_BRID, KC_BRIU, _______, _______, _______, _______,          _______, _______, _______, KC_MUTE, KC_VOLD, KC_VOLU, _______, _______,
         _______,DF(MAC_B),_______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______, _______, _______,
-        _______, QK_BOOT, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______,          _______,
+        _______, _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______,          QK_BOOT,
         _______, _______, _______, _______, _______, _______, _______, _______,          _______, _______, _______, KC_MPRV, KC_MNXT, KC_MPLY, _______, WIN_SLP,
-                 _______, _______,          _______,          RGB_TOG,                            _______,          _______,          _______, _______, _______
+                 _______, _______,          _______,          RGB_TOG,                            RGB_TOG,          _______,          _______, _______, _______
     ),
 
     [MAC_B] = LAYOUT_hot( /* Base */
@@ -343,8 +351,8 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [MAC_F] = LAYOUT_hot( /* FN */
         _______, _______, KC_BRID, KC_BRIU, _______, _______, _______, _______,          _______, _______, _______, KC_MUTE, KC_VOLD, KC_VOLU, _______, _______,
         _______,DF(WIN_B),_______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______, _______, _______,
-        _______, QK_BOOT, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______,          _______,
+        _______, _______, _______, _______, _______, _______, _______,                   _______, _______, _______, _______, _______, _______,          QK_BOOT,
         _______, _______, _______, _______, _______, _______, _______, _______,          _______, _______, _______, KC_MPRV, KC_MNXT, KC_MPLY, _______, MAC_SLP,
-                 _______, _______,          _______,          RGB_TOG,                            _______,          _______,          _______, _______, _______
+                 _______, _______,          _______,          RGB_TOG,                            RGB_TOG,          _______,          _______, _______, _______
     )
 };
