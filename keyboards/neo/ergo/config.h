@@ -18,3 +18,4 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #pragma once
 
 #define RGB_TRIGGER_ON_KEYDOWN
+#define TAPPING_TERM_PER_KEY
