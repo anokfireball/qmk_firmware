@@ -16,6 +16,8 @@
 
 #pragma once
 
+#define NKRO_DEFAULT_ON true
+
 #define ENCODER_DEFAULT_POS 0x3
 
 /* SPI Config for spi flash*/
@@ -40,3 +42,11 @@
 #define RGB_MATRIX_DEFAULT_HUE 0
 #define RGB_MATRIX_DEFAULT_SAT 0
 #define RGB_MATRIX_DEFAULT_SPD 128
+
+#define TAPPING_TERM_PER_KEY
+#define PERMISSIVE_HOLD_PER_KEY
+#define HOLD_ON_OTHER_KEY_PRESS_PER_KEY
+#define RETRO_TAPPING
+
+#define BOTH_SHIFTS_TURNS_ON_CAPS_WORD
+#define CAPS_WORD_INVERT_ON_SHIFT
