@@ -69,8 +69,11 @@ bool process_detected_host_os_user(os_variant_t detected_os) {
             break;
         case OS_WINDOWS:
         case OS_LINUX:
-        default:
             set_single_default_layer(WIN_B);
+            break;
+        default:
+            set_single_default_layer(DEF_B);
+            break;
     }
     return true;
 }
