@@ -60,6 +60,8 @@ enum custom_keycodes {
     MAC_UE,
 };
 
+bool capsword_active = false;
+
 bool process_detected_host_os_user(os_variant_t detected_os) {
     switch (detected_os) {
         case OS_MACOS:
@@ -75,6 +77,18 @@ bool process_detected_host_os_user(os_variant_t detected_os) {
             break;
     }
     return true;
+}
+
+void caps_word_set_user(bool active) {
+    switch (get_highest_layer(layer_state | default_layer_state)) {
+        case DEF_B:
+        case DEF_F:
+            caps_word_off();
+            return;
+        default:
+            break;
+    }
+    capsword_active = active;
 }
 
 // 0: ESC
@@ -94,7 +108,7 @@ bool process_detected_host_os_user(os_variant_t detected_os) {
 // 14: barrier lower mid right
 // 15: barrier bottom right
 bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
-    for (uint8_t i = 0; i < 5; i++) {
+    for (uint8_t i = 0; i < 16; i++) {
         rgb_matrix_set_color(i, RGB_OFF);
     }
     switch (get_highest_layer(layer_state | default_layer_state)) {
@@ -146,6 +160,13 @@ bool rgb_matrix_indicators_advanced_user(uint8_t led_min, uint8_t led_max) {
     }
     for (uint8_t i = 8; i < 16; i++) {
         rgb_matrix_set_color(i, RGB_OFF);
+    }
+    if (capsword_active) {
+        rgb_matrix_set_color(11, RGB_YELLOW);
+        rgb_matrix_set_color(15, RGB_YELLOW);
+    } else {
+        rgb_matrix_set_color(11, RGB_OFF);
+        rgb_matrix_set_color(15, RGB_OFF);
     }
     return false;
 }
@@ -293,7 +314,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_PGUP,  KC_TAB, KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,                      KC_Y,    KC_U,    KC_I,   KC_O,    KC_P,    KC_LBRC, KC_RBRC, KC_BSLS,
         KC_PGDN,MAC_CAPS, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,                      KC_H,    KC_J,    KC_K,   KC_L,    KC_SCLN, KC_QUOT,           KC_ENT,
         KC_END,  KC_LSFT, XXXXXXX, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,             KC_B,    KC_N,    KC_M,   KC_COMM, KC_DOT,  KC_SLSH, KC_RSFT, KC_RSFT,
-                 KC_LCTL, KC_LOPT,          KC_LCMD,       MAC_SPC,                            MAC_SPC,            MAC_MEGA,         MO(MAC_F),KC_ROPT, KC_RCTL
+                 KC_LCTL, KC_LOPT,          KC_LCMD,       MAC_SPC,                            MAC_SPC,            MAC_MEGA,        MO(MAC_F),KC_ROPT, KC_RCTL
     ),
 
     [MAC_U] = LAYOUT_hot( /* Umlauts */
