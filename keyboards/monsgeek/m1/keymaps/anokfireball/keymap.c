@@ -26,6 +26,14 @@
 #define WIN_SLP  LWIN(KC_L)
 #define WIN_CAPS CTL_T(KC_ESC)
 #define WIN_SPC  LT(WIN_U, KC_SPC)
+#define WIN_HR_F LSFT_T(KC_F)
+#define WIN_HR_D LCTL_T(KC_D)
+#define WIN_HR_S LALT_T(KC_S)
+#define WIN_HR_A LGUI_T(KC_A)
+#define WIN_HR_J RSFT_T(KC_J)
+#define WIN_HR_K RCTL_T(KC_K)
+#define WIN_HR_L RALT_T(KC_L)
+#define WIN_HR__ RGUI_T(KC_SCLN)
 // MAC versions of umlauts, eszett, etc.
 // works really well with US-ANSI
 #define MAC_SZ   LALT(KC_S)
@@ -34,6 +42,15 @@
 #define MAC_CAPS CMD_T(KC_ESC)
 #define MAC_SPC  LT(MAC_U, KC_SPC)
 #define MAC_MEGA LCAG_T(KC_RCMD)
+#define MAC_HR_F LSFT_T(KC_F)
+#define MAC_HR_D LCMD_T(KC_D)
+#define MAC_HR_S LOPT_T(KC_S)
+#define MAC_HR_A LCTL_T(KC_A)
+#define MAC_HR_J RSFT_T(KC_J)
+#define MAC_HR_K RCMD_T(KC_K)
+#define MAC_HR_L ROPT_T(KC_L)
+#define MAC_HR__ RCTL_T(KC_SCLN)
+
 
 enum __layers {
     DEF_B,
@@ -136,6 +153,23 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
         case MAC_CAPS:
         case MAC_MEGA:
             return 0;
+        case WIN_HR_A:
+        case WIN_HR_S:
+        case WIN_HR_D:
+        case WIN_HR_F:
+        case WIN_HR_J:
+        case WIN_HR_K:
+        case WIN_HR_L:
+        case WIN_HR__:
+        // case MAC_HR_A:
+        // case MAC_HR_S:
+        // case MAC_HR_D:
+        // case MAC_HR_F:
+        // case MAC_HR_J:
+        // case MAC_HR_K:
+        // case MAC_HR_L:
+        // case MAC_HR__:
+            return 0;
         default:
             return 400;
     }
@@ -145,6 +179,23 @@ bool get_permissive_hold(uint16_t keycode, keyrecord_t *record) {
     switch (keycode) {
         case WIN_SPC:
         case MAC_SPC:
+            return true;
+        case WIN_HR_A:
+        case WIN_HR_S:
+        case WIN_HR_D:
+        case WIN_HR_F:
+        case WIN_HR_J:
+        case WIN_HR_K:
+        case WIN_HR_L:
+        case WIN_HR__:
+        // case MAC_HR_A:
+        // case MAC_HR_S:
+        // case MAC_HR_D:
+        // case MAC_HR_F:
+        // case MAC_HR_J:
+        // case MAC_HR_K:
+        // case MAC_HR_L:
+        // case MAC_HR__:
             return true;
         default:
             return false;
@@ -157,6 +208,23 @@ bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
         case MAC_CAPS:
         case MAC_MEGA:
             return true;
+        case WIN_HR_A:
+        case WIN_HR_S:
+        case WIN_HR_D:
+        case WIN_HR_F:
+        case WIN_HR_J:
+        case WIN_HR_K:
+        case WIN_HR_L:
+        case WIN_HR__:
+        // case MAC_HR_A:
+        // case MAC_HR_S:
+        // case MAC_HR_D:
+        // case MAC_HR_F:
+        // case MAC_HR_J:
+        // case MAC_HR_K:
+        // case MAC_HR_L:
+        // case MAC_HR__:
+            return false;
         default:
             return false;
     }
@@ -250,7 +318,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_ESC,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11, KC_F12,   KC_DEL,           KC_MUTE,
         WIN_GRV, KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    WIN_6,   KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS,KC_EQL,   KC_BSPC,          KC_HOME,
         KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC,KC_RBRC,  KC_BSLS,          KC_PGUP,
-       WIN_CAPS, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN,WIN_QUOT,XXXXXXX,  KC_ENT,           KC_PGDN,
+        WIN_CAPS,WIN_HR_A,WIN_HR_S,WIN_HR_D,WIN_HR_F,KC_G,    KC_H,    WIN_HR_J,WIN_HR_K,WIN_HR_L,WIN_HR__,WIN_QUOT,XXXXXXX, KC_ENT,           KC_PGDN,
         KC_LSFT, XXXXXXX, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,          KC_RSFT, KC_UP,   KC_END,
         KC_LCTL, KC_LGUI, KC_LALT,                  WIN_SPC,                             KC_RALT,MO(WIN_F),KC_RCTL,          KC_LEFT, KC_DOWN, KC_RGHT
     ),
@@ -277,7 +345,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         KC_ESC,  KC_F1,   KC_F2,   KC_F3,   KC_F4,   KC_F5,   KC_F6,   KC_F7,   KC_F8,   KC_F9,   KC_F10,  KC_F11,  KC_F12,  KC_DEL,           KC_MUTE,
         KC_GRV,  KC_1,    KC_2,    KC_3,    KC_4,    KC_5,    KC_6,    KC_7,    KC_8,    KC_9,    KC_0,    KC_MINS,KC_EQL,   KC_BSPC,          KC_HOME,
         KC_TAB,  KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC,KC_RBRC,  KC_BSLS,          KC_PGUP,
-       MAC_CAPS, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,XXXXXXX,  KC_ENT,           KC_PGDN,
+        MAC_CAPS,MAC_HR_A,MAC_HR_S,MAC_HR_D,MAC_HR_F,KC_G,    KC_H,    MAC_HR_J,MAC_HR_K,MAC_HR_L,MAC_HR__,KC_QUOT,XXXXXXX,  KC_ENT,           KC_PGDN,
         KC_LSFT, XXXXXXX, KC_Z,    KC_X,    KC_C,    KC_V,    KC_B,    KC_N,    KC_M,    KC_COMM, KC_DOT,  KC_SLSH,          KC_RSFT, KC_UP,   KC_END,
         KC_LCTL, KC_LOPT, KC_LCMD,                  MAC_SPC,                            MAC_MEGA,MO(MAC_F),KC_RCTL,          KC_LEFT, KC_DOWN, KC_RGHT
     ),
