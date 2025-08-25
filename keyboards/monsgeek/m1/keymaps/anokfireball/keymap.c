@@ -26,14 +26,16 @@
 #define WIN_SLP  LWIN(KC_L)
 #define WIN_CAPS CTL_T(KC_ESC)
 #define WIN_SPC  LT(WIN_U, KC_SPC)
-#define WIN_HR_F LSFT_T(KC_F)
-#define WIN_HR_D LCTL_T(KC_D)
-#define WIN_HR_S LALT_T(KC_S)
+// Home Row mods
 #define WIN_HR_A LGUI_T(KC_A)
-#define WIN_HR_J RSFT_T(KC_J)
-#define WIN_HR_K RCTL_T(KC_K)
+#define WIN_HR_S LALT_T(KC_S)
+#define WIN_HR_D LSFT_T(KC_D)
+#define WIN_HR_F LCTL_T(KC_F)
+#define WIN_HR_J RCTL_T(KC_J)
+#define WIN_HR_K RSFT_T(KC_K)
 #define WIN_HR_L RALT_T(KC_L)
 #define WIN_HR__ RGUI_T(KC_SCLN)
+
 // MAC versions of umlauts, eszett, etc.
 // works really well with US-ANSI
 #define MAC_SZ   LALT(KC_S)
@@ -42,15 +44,15 @@
 #define MAC_CAPS CMD_T(KC_ESC)
 #define MAC_SPC  LT(MAC_U, KC_SPC)
 #define MAC_MEGA LCAG_T(KC_RCMD)
-#define MAC_HR_F LSFT_T(KC_F)
-#define MAC_HR_D LCMD_T(KC_D)
-#define MAC_HR_S LOPT_T(KC_S)
+// Home Row mods
 #define MAC_HR_A LCTL_T(KC_A)
-#define MAC_HR_J RSFT_T(KC_J)
-#define MAC_HR_K RCMD_T(KC_K)
+#define MAC_HR_S LOPT_T(KC_S)
+#define MAC_HR_D LSFT_T(KC_D)
+#define MAC_HR_F LCMD_T(KC_F)
+#define MAC_HR_J RCMD_T(KC_J)
+#define MAC_HR_K RSFT_T(KC_K)
 #define MAC_HR_L ROPT_T(KC_L)
 #define MAC_HR__ RCTL_T(KC_SCLN)
-
 
 enum __layers {
     DEF_B,
@@ -161,17 +163,17 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
         case WIN_HR_K:
         case WIN_HR_L:
         case WIN_HR__:
-        // case MAC_HR_A:
+        case MAC_HR_A:
         // case MAC_HR_S:
         // case MAC_HR_D:
-        // case MAC_HR_F:
-        // case MAC_HR_J:
+        case MAC_HR_F:
+        case MAC_HR_J:
         // case MAC_HR_K:
         // case MAC_HR_L:
-        // case MAC_HR__:
-            return 0;
+        case MAC_HR__:
+            return TAPPING_TERM;
         default:
-            return 400;
+            return TAPPING_TERM;
     }
 }
 
@@ -188,14 +190,14 @@ bool get_permissive_hold(uint16_t keycode, keyrecord_t *record) {
         case WIN_HR_K:
         case WIN_HR_L:
         case WIN_HR__:
-        // case MAC_HR_A:
+        case MAC_HR_A:
         // case MAC_HR_S:
         // case MAC_HR_D:
-        // case MAC_HR_F:
-        // case MAC_HR_J:
+        case MAC_HR_F:
+        case MAC_HR_J:
         // case MAC_HR_K:
         // case MAC_HR_L:
-        // case MAC_HR__:
+        case MAC_HR__:
             return true;
         default:
             return false;
@@ -216,14 +218,14 @@ bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
         case WIN_HR_K:
         case WIN_HR_L:
         case WIN_HR__:
-        // case MAC_HR_A:
+        case MAC_HR_A:
         // case MAC_HR_S:
         // case MAC_HR_D:
-        // case MAC_HR_F:
-        // case MAC_HR_J:
+        case MAC_HR_F:
+        case MAC_HR_J:
         // case MAC_HR_K:
         // case MAC_HR_L:
-        // case MAC_HR__:
+        case MAC_HR__:
             return false;
         default:
             return false;
@@ -335,9 +337,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [WIN_F] = LAYOUT_all( /* FN */
         _______, KC_BRID, KC_BRIU, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, WIN_SLP,           KC_MPLY,
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,           _______,
-       DF(MAC_B),_______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,           _______,
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, QK_BOOT,           _______,
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,  _______, _______,
+       DF(MAC_B),_______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,           DT_UP,
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, QK_BOOT,           DT_DOWN,
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,  _______, DT_PRNT,
         _______, _______, _______,                   RGB_TOG,                            _______, _______, _______,          _______,  _______, _______
     ),
 
@@ -362,9 +364,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [MAC_F] = LAYOUT_all( /* FN */
         _______, KC_BRID, KC_BRIU, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, MAC_SLP,           KC_MPLY,
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,           _______,
-       DF(DEF_B),_______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,           _______,
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, QK_BOOT,           _______,
-        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,  _______, _______,
+       DF(DEF_B),_______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,           DT_UP,
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, QK_BOOT,           DT_DOWN,
+        _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______,          _______,  _______, DT_PRNT,
         _______, _______, _______,                   RGB_TOG,                            _______, _______, _______,          _______,  _______, _______
     ),
 };
