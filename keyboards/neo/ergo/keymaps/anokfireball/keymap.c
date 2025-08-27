@@ -273,6 +273,34 @@ bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
     }
 }
 
+// Umlauts and Shift must not be shortcut, they are part of flow typing
+bool is_flow_tap_key(uint16_t keycode) {
+    switch (keycode) {
+        case WIN_HR_A:
+        case WIN_HR_S:
+        case WIN_HR_F:
+        case WIN_HR_J:
+        case WIN_HR_L:
+        case WIN_HR__:
+        case MAC_HR_A:
+        // case MAC_HR_S:
+        case MAC_HR_F:
+        case MAC_HR_J:
+        // case MAC_HR_L:
+        case MAC_HR__:
+            return true;
+        case WIN_SPC:
+        case MAC_SPC:
+        case WIN_HR_D:
+        case WIN_HR_K:
+        // case MAC_HR_D:
+        // case MAC_HR_K:
+            return false;
+        default:
+            return false;
+    }
+}
+
 void send_string_(const char *str) {
     // Save the current modifier state to ensure that any active modifiers (e.g., shift, ctrl)
     // are not lost when sending the string. Left-Shift somehow loses its modifier state when
@@ -403,3 +431,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
                  _______, _______,          _______,          RGB_TOG,                            RGB_TOG,          _______,          _______, _______, _______
     )
 };
+
+const char PROGMEM chordal_hold_layout[MATRIX_ROWS][MATRIX_COLS] =
+    LAYOUT_hot(
+        'L', 'L',      'L', 'L', 'L', 'L', 'L', 'L',              'R', 'R', 'R', 'R', 'R', 'R', 'R', 'R',
+        'L', 'L',      'L', 'L', 'L', 'L', 'L',              'R', 'R', 'R', 'R', 'R', 'R', 'R',      'R',
+        'L', 'L',      'L', 'L', 'L', 'L', 'L',              'R', 'R', 'R', 'R', 'R', 'R',      'R',
+        'L', 'L', 'L', 'L', 'L', 'L', 'L', '*',         '*', 'R', 'R', 'R', 'R', 'R',      'R',      'R',
+             'L', 'L',      'L',      '*',                   '*', 'R',           'R', 'R', 'R'
+    );
