@@ -196,23 +196,27 @@ uint16_t get_tapping_term(uint16_t keycode, keyrecord_t *record) {
         case MAC_CAPS:
         case MAC_MEGA:
             return 0;
-        case WIN_HR_A:
-        case WIN_HR_S:
         case WIN_HR_D:
         case WIN_HR_F:
         case WIN_HR_J:
         case WIN_HR_K:
-        case WIN_HR_L:
-        case WIN_HR__:
-        case MAC_HR_A:
-        // case MAC_HR_S:
         // case MAC_HR_D:
         case MAC_HR_F:
         case MAC_HR_J:
         // case MAC_HR_K:
-        // case MAC_HR_L:
-        case MAC_HR__:
             return TAPPING_TERM;
+        /* turns out I have weak lingering pinkeys */
+        case WIN_HR_A:
+        case WIN_HR__:
+        case MAC_HR_A:
+        case MAC_HR__:
+            return TAPPING_TERM * 2;
+        /* ring finder is not too strong either */
+        case WIN_HR_S:
+        case WIN_HR_L:
+        // case MAC_HR_S:
+        // case MAC_HR_L:
+            return TAPPING_TERM * 1.5;
         default:
             return TAPPING_TERM;
     }
@@ -223,23 +227,27 @@ bool get_permissive_hold(uint16_t keycode, keyrecord_t *record) {
         case WIN_SPC:
         case MAC_SPC:
             return true;
-        case WIN_HR_A:
-        case WIN_HR_S:
         case WIN_HR_D:
         case WIN_HR_F:
         case WIN_HR_J:
         case WIN_HR_K:
-        case WIN_HR_L:
-        case WIN_HR__:
-        case MAC_HR_A:
-        // case MAC_HR_S:
         // case MAC_HR_D:
         case MAC_HR_F:
         case MAC_HR_J:
-        // case MAC_HR_K:
-        // case MAC_HR_L:
-        case MAC_HR__:
+        // case MAC_HR_K
             return true;
+        /* turns out I have weak lingering pinkeys */
+        case WIN_HR_A:
+        case WIN_HR__:
+        case MAC_HR_A:
+        case MAC_HR__:
+            return false;
+        /* ring finder is not too strong either */
+        case WIN_HR_S:
+        case WIN_HR_L:
+        // case MAC_HR_S:
+        // case MAC_HR_L:
+            return false;
         default:
             return false;
     }
