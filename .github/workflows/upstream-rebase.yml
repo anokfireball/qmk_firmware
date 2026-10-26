@@ -28,7 +28,7 @@ jobs:
   rebase:
     name: Rebase and force-update master
     runs-on: ubuntu-latest
-    container: ghcr.io/qmk/qmk_cli:latest
+    container: ghcr.io/qmk/qmk_cli:1.2.0
     steps:
       - name: Checkout fork master (full history)
         uses: actions/checkout@v6
