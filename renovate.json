@@ -1,6 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:best-practices"],
+  "extends": ["config:best-practices", "helpers:githubDigestChangelogs"],
   "forkProcessing": "enabled",
   "includePaths": [
     ".upstream-qmk-tag",
@@ -22,6 +22,11 @@
       "description": "Only 0.x.y release tags; legacy TMK-era tags like v4.0 would otherwise sort newer",
       "matchPackageNames": ["qmk/qmk_firmware"],
       "allowedVersions": "/^0\\.\\d+\\.\\d+$/"
+    },
+    {
+      "description": "The qmk_cli image carries no org.opencontainers.image.source label, so point Renovate at the repo for release notes on version bumps",
+      "matchPackageNames": ["ghcr.io/qmk/qmk_cli"],
+      "sourceUrl": "https://github.com/qmk/qmk_cli"
     }
   ]
 }
