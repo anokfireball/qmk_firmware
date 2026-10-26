@@ -28,10 +28,10 @@ jobs:
   rebase:
     name: Rebase and force-update master
     runs-on: ubuntu-latest
-    container: ghcr.io/qmk/qmk_cli:latest
+    container: ghcr.io/qmk/qmk_cli:1.2.0@sha256:b7d7fa8fb4432b569931de5ad59098cb788f440ed61a62c5126746b71aee0f4a
     steps:
       - name: Checkout fork master (full history)
-        uses: actions/checkout@v6
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || 'master' }}
           fetch-depth: 0
@@ -125,7 +125,7 @@ jobs:
 
       - name: Checkout userspace keymaps (build gate)
         if: steps.rebase.outputs.changed == 'true'
-        uses: actions/checkout@v6
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
           repository: anokfireball/qmk_userspace
           ref: main
