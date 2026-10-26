@@ -6,7 +6,9 @@
     {
       "customType": "regex",
       "description": "Track the upstream QMK firmware release tag this fork is rebased onto",
-      "fileMatch": ["^\\.upstream-qmk-tag$"],
+      "managerFilePatterns": [
+        "/^\\.upstream-qmk-tag$/"
+      ],
       "matchStrings": ["^(?<currentValue>[0-9]+\\.[0-9]+\\.[0-9]+)\\s*$"],
       "depNameTemplate": "qmk/qmk_firmware",
       "datasourceTemplate": "github-tags",
