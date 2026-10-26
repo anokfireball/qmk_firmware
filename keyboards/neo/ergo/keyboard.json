@@ -2,6 +2,7 @@
     "keyboard_name": "NEO ERGO WIRED",
     "manufacturer": "NEO Studio",
     "maintainer": "NEO Studio",
+    "url": "https://github.com/owlab-git",
     "usb": {
         "vid": "0x4E45",
         "pid": "0x4552",
@@ -16,8 +17,6 @@
         "bootmagic": true,
         "mousekey": false,
         "extrakey": true,
-        "console": false,
-        "command": false,
         "nkro": true,
         "rgb_matrix": true
     },
