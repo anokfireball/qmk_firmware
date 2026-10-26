@@ -1,0 +1,161 @@
+name: Rebase onto upstream tag
+
+# Renovate bumps .upstream-qmk-tag; merging that PR triggers the rebase.
+# The rebased history replaces master, so a regular PR merge cannot carry it:
+# this workflow performs the rebase and force-updates master with a lease.
+# It only ever runs for the exact fork tip that was checked out.
+on:
+  pull_request:
+    branches:
+      - master
+    paths:
+      - .upstream-qmk-tag
+  push:
+    branches:
+      - master
+    paths:
+      - .upstream-qmk-tag
+  workflow_dispatch:
+
+concurrency:
+  group: qmk-upstream-rebase
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  rebase:
+    name: Rebase and force-update master
+    runs-on: ubuntu-latest
+    container: ghcr.io/qmk/qmk_cli:latest
+    steps:
+      - name: Checkout fork master (full history)
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event_name == 'pull_request' && github.event.pull_request.head.sha || 'master' }}
+          fetch-depth: 0
+          submodules: recursive
+          persist-credentials: false
+
+      - name: Trust checkout in container
+        run: git config --global --add safe.directory "$GITHUB_WORKSPACE"
+
+      - name: Capture fork master tip
+        id: fork
+        shell: bash
+        run: |
+          set -euo pipefail
+          echo "tip=$(git rev-parse HEAD)" >> "$GITHUB_OUTPUT"
+
+      - name: Resolve upstream tag
+        id: upstream
+        shell: bash
+        run: |
+          set -euo pipefail
+          tag="$(tr -d '[:space:]' < .upstream-qmk-tag)"
+          if ! [[ "$tag" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::.upstream-qmk-tag must contain a plain release tag (e.g. 0.34.7)"
+            exit 1
+          fi
+          # ls-remote reports both the tag object and its peeled commit (^{}).
+          peeled="$(git ls-remote https://github.com/qmk/qmk_firmware.git "refs/tags/${tag}^{}")"
+          if [ -n "$peeled" ]; then
+            sha="${peeled%%$'\t'*}"
+          else
+            raw="$(git ls-remote https://github.com/qmk/qmk_firmware.git "refs/tags/${tag}")"
+            if [ -z "$raw" ]; then
+              echo "::error::tag ${tag} not found on qmk/qmk_firmware"
+              exit 1
+            fi
+            sha="${raw%%$'\t'*}"
+          fi
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "sha=$sha" >> "$GITHUB_OUTPUT"
+          echo "upstream tag $tag -> $sha"
+
+      - name: Fetch upstream and validate tag
+        shell: bash
+        env:
+          UPSTREAM_SHA: ${{ steps.upstream.outputs.sha }}
+        run: |
+          set -euo pipefail
+          git remote add upstream https://github.com/qmk/qmk_firmware.git
+          git fetch --no-tags upstream "$UPSTREAM_SHA" master
+          if ! git cat-file -e "${UPSTREAM_SHA}^{commit}"; then
+            echo "::error::${UPSTREAM_SHA} is not a commit on qmk/qmk_firmware"
+            exit 1
+          fi
+
+      - name: Rebase fork commits onto tag
+        id: rebase
+        shell: bash
+        env:
+          UPSTREAM_SHA: ${{ steps.upstream.outputs.sha }}
+          FORK_TIP: ${{ steps.fork.outputs.tip }}
+        run: |
+          set -euo pipefail
+          if git merge-base --is-ancestor "$UPSTREAM_SHA" "$FORK_TIP" && [ "$(git rev-parse "$FORK_TIP")" != "$(git rev-parse "$UPSTREAM_SHA")" ]; then
+            echo "fork already contains $UPSTREAM_SHA; nothing to rebase"
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git config user.name "qmk-firmware-rebase[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          fork_base="$(git merge-base "$FORK_TIP" refs/remotes/upstream/master || true)"
+          if [ -z "$fork_base" ]; then
+            echo "::error::No common upstream base found for the fork"
+            exit 1
+          fi
+          if ! git merge-base --is-ancestor "$fork_base" "$UPSTREAM_SHA"; then
+            echo "::error::Tag predates the fork's current upstream base; refusing rollback"
+            exit 1
+          fi
+          merge_base="$(git merge-base "$FORK_TIP" "$UPSTREAM_SHA")"
+          if [ "$merge_base" = "$FORK_TIP" ]; then
+            echo "fork has no custom commits; resetting to tag"
+            git reset --hard "$UPSTREAM_SHA"
+          else
+            git rebase --onto "$UPSTREAM_SHA" "$merge_base"
+          fi
+          git merge-base --is-ancestor "$UPSTREAM_SHA" HEAD
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+          echo "rebased head: $(git rev-parse HEAD)"
+          git log --oneline -n 5
+
+      - name: Checkout userspace keymaps (build gate)
+        if: steps.rebase.outputs.changed == 'true'
+        uses: actions/checkout@v6
+        with:
+          repository: anokfireball/qmk_userspace
+          ref: main
+          path: qmk_userspace
+          persist-credentials: false
+
+      - name: Build both keymaps on rebased fork
+        if: steps.rebase.outputs.changed == 'true'
+        run: |
+          set -euo pipefail
+          pip install -r requirements.txt
+          qmk config user.qmk_home="$GITHUB_WORKSPACE" user.overlay_dir="$GITHUB_WORKSPACE/qmk_userspace"
+          qmk userspace-doctor
+          qmk userspace-compile -p
+
+      - name: Force-update master with lease
+        if: steps.rebase.outputs.changed == 'true' && github.event_name != 'pull_request'
+        env:
+          FORK_TIP: ${{ steps.fork.outputs.tip }}
+          GH_TOKEN: ${{ github.token }}
+          GIT_TERMINAL_PROMPT: "0"
+        run: |
+          set -euo pipefail
+          # Refetch the tracked ref so the lease reflects the live remote.
+          git fetch --no-tags origin +refs/heads/master:refs/remotes/origin/master
+          live="$(git rev-parse refs/remotes/origin/master)"
+          if [ "$live" != "$FORK_TIP" ]; then
+            echo "::error::master moved since checkout; refusing to overwrite"
+            exit 1
+          fi
+          git config credential.helper '!f() { echo username=x-access-token; echo "password=$GH_TOKEN"; }; f'
+          git config credential.useHttpPath true
+          git push --force-with-lease="refs/heads/master:$live" origin HEAD:refs/heads/master

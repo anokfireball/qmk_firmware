@@ -1,0 +1,23 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:best-practices"],
+  "forkProcessing": "enabled",
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Track the upstream QMK firmware release tag this fork is rebased onto",
+      "fileMatch": ["^\\.upstream-qmk-tag$"],
+      "matchStrings": ["^(?<currentValue>[0-9]+\\.[0-9]+\\.[0-9]+)\\s*$"],
+      "depNameTemplate": "qmk/qmk_firmware",
+      "datasourceTemplate": "github-tags",
+      "versioningTemplate": "semver"
+    }
+  ],
+  "packageRules": [
+    {
+      "description": "Only 0.x.y release tags; legacy TMK-era tags like v4.0 would otherwise sort newer",
+      "matchPackageNames": ["qmk/qmk_firmware"],
+      "allowedVersions": "/^0\\.\\d+\\.\\d+$/"
+    }
+  ]
+}
